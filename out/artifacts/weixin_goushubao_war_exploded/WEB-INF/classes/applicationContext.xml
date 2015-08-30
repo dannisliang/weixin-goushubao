@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd" >
+
+	<!-- 配置Action -->
+	
+	<!-- 数据库连接池-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql:///goushubao"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="492226568"></property>
+	</bean>
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 配置hibernate属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.connection.autocommit">true</prop>
+			</props>
+		</property>		
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:/domain</value>
+			</list>
+		</property>
+	</bean>
+    <!-- 微 信 start -->
+    <bean id="tokenAction" class="web.action.TokenAction" scope="prototype"></bean>
+    <bean id="openIdAction" class="web.action.GetOpenidAction" scope="prototype"></bean>
+    <!-- 微信 end -->
+    <!-- 管理员 start -->
+    <bean id="sellerAction" class="web.action.SellerAction" scope="prototype"></bean>
+    <!-- 管理员 end-->
+    <!-- 城市 start-->
+    <bean id="cityService" class="service.CityService">
+        <property name="cityDao" ref="cityDao"></property>
+    </bean>
+    <bean id="cityDao" class="dao.CityDao">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <!-- 城市end-->
+    <!--服务范围 start-->
+    <bean id="serviceAreaService" class="service.ServiceAreaService">
+        <property name="serviceAreaDao" ref="serviceAreaDao"></property>
+    </bean>
+    <bean id="serviceAreaDao" class="dao.ServiceAreaDao">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <!--服务范围 end-->
+    <!--学校 start-->
+    <bean id="schoolService" class="service.SchoolService">
+        <property name="schoolDao" ref="schoolDao"></property>
+    </bean>
+    <bean id="schoolDao" class="dao.SchoolDao">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <!--学校 end-->
+    <bean id="sellerService" class="service.SellerService">
+        <property name="sellerDao" ref="sellerDao"></property>
+    </bean>
+    <bean id="sellerDao" class="dao.SellerDao">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

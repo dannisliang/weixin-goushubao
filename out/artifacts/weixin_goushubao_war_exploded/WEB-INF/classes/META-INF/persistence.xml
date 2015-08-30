@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="NewPersistenceUnit">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <mapping-file>domain/Admin.xml</mapping-file>
+        <mapping-file>domain/Book.xml</mapping-file>
+        <mapping-file>domain/Cart.xml</mapping-file>
+        <mapping-file>domain/Cartitem.xml</mapping-file>
+        <mapping-file>domain/Category.xml</mapping-file>
+        <mapping-file>domain/Feedback.xml</mapping-file>
+        <mapping-file>domain/OrderAddr.xml</mapping-file>
+        <mapping-file>domain/Orderitem.xml</mapping-file>
+        <mapping-file>domain/Orders.xml</mapping-file>
+        <mapping-file>domain/SalesBook.xml</mapping-file>
+        <mapping-file>domain/School.xml</mapping-file>
+        <mapping-file>domain/SchoolCategory.xml</mapping-file>
+        <mapping-file>domain/Seller.xml</mapping-file>
+        <mapping-file>domain/ServiceArea.xml</mapping-file>
+        <mapping-file>domain/Subscribe.xml</mapping-file>
+        <mapping-file>domain/SubscribeItem.xml</mapping-file>
+        <mapping-file>domain/User.xml</mapping-file>
+        <mapping-file>domain/WeixinUser.xml</mapping-file>
+        <class>domain.Admin</class>
+        <class>domain.Book</class>
+        <class>domain.Cart</class>
+        <class>domain.Cartitem</class>
+        <class>domain.Category</class>
+        <class>domain.Feedback</class>
+        <class>domain.OrderAddr</class>
+        <class>domain.Orderitem</class>
+        <class>domain.Orders</class>
+        <class>domain.SalesBook</class>
+        <class>domain.School</class>
+        <class>domain.SchoolCategory</class>
+        <class>domain.Seller</class>
+        <class>domain.ServiceArea</class>
+        <class>domain.Subscribe</class>
+        <class>domain.SubscribeItem</class>
+        <class>domain.User</class>
+        <class>domain.WeixinUser</class>
+        <properties>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/goushubao"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.username"/>
+            <property name="hibernate.connection.password"/>
+            <property name="hibernate.archive.autodetection" value="class"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</persistence>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.convention.classes.reload" value="true" />  
+   <constant name="struts.custom.i18n.resources" value="message"></constant>
+   <constant name="struts.multipart.saveDir" value="/tmp"/>
+   <package name="seller-default" namespace="seller" extends="json-default">
+   	<!--	<interceptors>
+   			&lt;!&ndash;定义管理员登陆拦截器  &ndash;&gt;
+   			<interceptor name="adminLogin" class="com.haoshutao.web.intercepter.AdminLoginIntecrpter"></interceptor>
+   			&lt;!&ndash;定义管理员拦截栈  &ndash;&gt;
+   			<interceptor-stack name="adminStack">
+   				<interceptor-ref name="defaultStack"></interceptor-ref>
+   				<interceptor-ref name="adminLogin"></interceptor-ref>
+   			</interceptor-stack>
+   		</interceptors>-->
+   		<!-- <action name="changeUserState" class="adminUserAction" method="changeUserState">
+   			<result name="changeStateSuccess" type="json">
+   				<param name="root">action</param>
+   				<param name="includeProperties">isSuccess</param>
+   			</result>
+   		</action> -->
+   </package>
+
+</struts>

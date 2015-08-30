@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - goushubao@localhost" uuid="97436d9a-1e74-490e-8121-11a178e26f23">
+    <database-info product="MySQL" version="5.6.21-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="goushubao"/>
+    <table name="admin" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="username" sqlType="VARCHAR" precision="30" scale="0" nullable="true" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="feedback_ibfk_2" table="feedback" schema="" catalog="goushubao" columns="aid"/>
+    </table>
+    <table name="book" schema="" catalog="goushubao" type="TABLE">
+      <column name="isbn" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="title" sqlType="VARCHAR" precision="30" scale="0" nullable="true" jdbcType="12"/>
+      <column name="publisher" sqlType="VARCHAR" precision="30" scale="0" nullable="true" jdbcType="12"/>
+      <column name="author" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="price" sqlType="DOUBLE" precision="22" scale="0" nullable="true" jdbcType="8"/>
+      <column name="image" sqlType="VARCHAR" precision="30" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="isbn"/>
+      <exported-key name="cartitem_ibfk_3" table="cartitem" schema="" catalog="goushubao" columns="bid"/>
+      <exported-key name="orderitem_ibfk_2" table="orderitem" schema="" catalog="goushubao" columns="bid"/>
+      <exported-key name="sales_book_ibfk_1" table="sales_book" schema="" catalog="goushubao" columns="bid"/>
+      <exported-key name="subscribe_item_ibfk_2" table="subscribe_item" schema="" catalog="goushubao" columns="bid"/>
+    </table>
+    <table name="cart" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="uid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="total_fee" sqlType="DOUBLE" precision="22" scale="0" nullable="true" jdbcType="8"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="cart_ibfk_1" columns="uid" ref-table="user" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="cartitem_ibfk_1" table="cartitem" schema="" catalog="goushubao" columns="cid"/>
+    </table>
+    <table name="cartitem" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="cid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="sbid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="num" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="sub_fee" sqlType="DOUBLE" precision="22" scale="0" nullable="true" jdbcType="8"/>
+      <column name="is_old" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <column name="bid" sqlType="VARCHAR" precision="15" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="cartitem_ibfk_1" columns="cid" ref-table="cart" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="cartitem_ibfk_2" columns="sbid" ref-table="sales_book" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="cartitem_ibfk_3" columns="bid" ref-table="book" ref-schema="" ref-catalog="goushubao" ref-columns="isbn" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="sid" unique="false" columns="sbid"/>
+    </table>
+    <table name="category" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="sales_book_ibfk_3" table="sales_book" schema="" catalog="goushubao" columns="cid"/>
+      <exported-key name="school_category_ibfk_2" table="school_category" schema="" catalog="goushubao" columns="cid"/>
+    </table>
+    <table name="feedback" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="content" sqlType="VARCHAR" precision="300" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title" sqlType="VARCHAR" precision="35" scale="0" nullable="true" jdbcType="12"/>
+      <column name="from" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" remarks="MOS7o+ihqOeUqOaItzHku6PooajllYblrrY="/>
+      <column name="state" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="aid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="create_date" sqlType="VARCHAR" precision="30" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="feedback_ibfk_1" columns="sid" ref-table="seller" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="feedback_ibfk_2" columns="aid" ref-table="admin" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
+    <table name="order_addr" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="uid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="phone" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="addr" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="order_addr_ibfk_1" columns="uid" ref-table="user" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="orders_ibfk_1" table="orders" schema="" catalog="goushubao" columns="oaid"/>
+    </table>
+    <table name="orderitem" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="oid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="bid" sqlType="VARCHAR" precision="25" scale="0" nullable="true" jdbcType="12"/>
+      <column name="is_old" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="sub_fee" sqlType="DOUBLE" precision="22" scale="0" nullable="true" jdbcType="8"/>
+      <column name="num" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="sbid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="state" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA==" remarks="MHN1Y2Nlc3MgMWZhaWxlZCAy"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="orderitem_ibfk_1" columns="oid" ref-table="orders" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="orderitem_ibfk_2" columns="bid" ref-table="book" ref-schema="" ref-catalog="goushubao" ref-columns="isbn" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="orderitem_ibfk_3" columns="sbid" ref-table="sales_book" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
+    <table name="orders" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="total_fee" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8"/>
+      <column name="ordertime" sqlType="VARCHAR" precision="25" scale="0" nullable="true" jdbcType="12"/>
+      <column name="state" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="oaid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="uid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="is_pay" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA==" remarks="MOS7o+ihqOacquS7mOasvu+8jDHku6Pooajlt7Lnu4/ku5jmrL4="/>
+      <column name="date" sqlType="VARCHAR" precision="30" scale="0" nullable="true" jdbcType="12"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="orders_ibfk_1" columns="oaid" ref-table="order_addr" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="orders_ibfk_2" columns="uid" ref-table="user" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="orders_ibfk_3" columns="sid" ref-table="seller" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="orderitem_ibfk_1" table="orderitem" schema="" catalog="goushubao" columns="oid"/>
+    </table>
+    <table name="sales_book" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="num" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="price" sqlType="DOUBLE" precision="22" scale="0" nullable="true" jdbcType="8"/>
+      <column name="shelf_time" sqlType="VARCHAR" precision="25" scale="0" nullable="true" jdbcType="12"/>
+      <column name="bid" sqlType="VARCHAR" precision="25" scale="0" nullable="true" jdbcType="12"/>
+      <column name="cid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="discount" sqlType="FLOAT" precision="12" scale="0" nullable="true" jdbcType="7" def="NA=="/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="sales_book_ibfk_1" columns="bid" ref-table="book" ref-schema="" ref-catalog="goushubao" ref-columns="isbn" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="sales_book_ibfk_3" columns="cid" ref-table="category" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="sales_book_ibfk_4" columns="sid" ref-table="seller" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="cartitem_ibfk_2" table="cartitem" schema="" catalog="goushubao" columns="sbid"/>
+      <exported-key name="orderitem_ibfk_3" table="orderitem" schema="" catalog="goushubao" columns="sbid"/>
+      <exported-key name="subscribe_item_ibfk_3" table="subscribe_item" schema="" catalog="goushubao" columns="sbid"/>
+    </table>
+    <table name="school" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="addr" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="school_ibfk_1" columns="sid" ref-table="service_area" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="school_category_ibfk_1" table="school_category" schema="" catalog="goushubao" columns="sid"/>
+      <exported-key name="seller_ibfk_1" table="seller" schema="" catalog="goushubao" columns="sid"/>
+      <exported-key name="user_ibfk_1" table="user" schema="" catalog="goushubao" columns="sid"/>
+    </table>
+    <table name="school_category" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="cid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="school_category_ibfk_1" columns="sid" ref-table="school" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="school_category_ibfk_2" columns="cid" ref-table="category" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
+    <table name="seller" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="username" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="seller_ibfk_1" columns="sid" ref-table="school" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="feedback_ibfk_1" table="feedback" schema="" catalog="goushubao" columns="sid"/>
+      <exported-key name="orders_ibfk_3" table="orders" schema="" catalog="goushubao" columns="sid"/>
+      <exported-key name="sales_book_ibfk_4" table="sales_book" schema="" catalog="goushubao" columns="sid"/>
+    </table>
+    <table name="service_area" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="30" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="school_ibfk_1" table="school" schema="" catalog="goushubao" columns="sid"/>
+    </table>
+    <table name="subscribe" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="uid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="total_fee" sqlType="DOUBLE" precision="22" scale="0" nullable="true" jdbcType="8"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="subscribe_ibfk_1" columns="uid" ref-table="user" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="subscribe_item_ibfk_1" table="subscribe_item" schema="" catalog="goushubao" columns="sid"/>
+    </table>
+    <table name="subscribe_item" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="bid" sqlType="VARCHAR" precision="25" scale="0" nullable="true" jdbcType="12"/>
+      <column name="num" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="sub_fee" sqlType="DOUBLE" precision="22" scale="0" nullable="true" jdbcType="8"/>
+      <column name="sbid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="is_old" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="subscribe_item_ibfk_1" columns="sid" ref-table="subscribe" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="subscribe_item_ibfk_2" columns="bid" ref-table="book" ref-schema="" ref-catalog="goushubao" ref-columns="isbn" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="subscribe_item_ibfk_3" columns="sbid" ref-table="sales_book" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
+    <table name="user" schema="" catalog="goushubao" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="tel" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <column name="addr" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="state" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="sid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="sex" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="head_image" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="regist_date" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="user_ibfk_1" columns="sid" ref-table="school" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="cart_ibfk_1" table="cart" schema="" catalog="goushubao" columns="uid"/>
+      <exported-key name="order_addr_ibfk_1" table="order_addr" schema="" catalog="goushubao" columns="uid"/>
+      <exported-key name="orders_ibfk_2" table="orders" schema="" catalog="goushubao" columns="uid"/>
+      <exported-key name="subscribe_ibfk_1" table="subscribe" schema="" catalog="goushubao" columns="uid"/>
+      <exported-key name="weixin_user_ibfk_1" table="weixin_user" schema="" catalog="goushubao" columns="uid"/>
+    </table>
+    <table name="weixin_user" schema="" catalog="goushubao" type="TABLE">
+      <column name="openid" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="uid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="openid"/>
+      <foreign-key name="weixin_user_ibfk_1" columns="uid" ref-table="user" ref-schema="" ref-catalog="goushubao" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+    </table>
+  </data-source>
+</component>
