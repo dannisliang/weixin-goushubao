@@ -10,10 +10,10 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="category" class="domain.Category" fetch="select">
+        <many-to-one name="category" class="domain.Category" fetch="select" lazy="false">
             <column name="cid" />
         </many-to-one>
-        <many-to-one name="school" class="domain.School" fetch="select">
+        <many-to-one name="school" class="domain.School" fetch="select" lazy="false">
             <column name="sid" />
         </many-to-one>
     </class>

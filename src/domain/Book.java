@@ -17,6 +17,7 @@ public class Book implements java.io.Serializable {
     private String author;
     private Double price;
     private String image;
+    private String bigImage;
     private Set subscribeItems = new HashSet(0);
     private Set salesBooks = new HashSet(0);
     private Set cartitems = new HashSet(0);
@@ -36,7 +37,7 @@ public class Book implements java.io.Serializable {
     /** full constructor */
     public Book(String isbn, String title, String publisher, String author,
                 Double price, String image, Set subscribeItems, Set salesBooks,
-                Set cartitems, Set orderitems) {
+                Set cartitems, Set orderitems,String bigImage) {
         this.isbn = isbn;
         this.title = title;
         this.publisher = publisher;
@@ -47,6 +48,7 @@ public class Book implements java.io.Serializable {
         this.salesBooks = salesBooks;
         this.cartitems = cartitems;
         this.orderitems = orderitems;
+        this.bigImage = bigImage;
     }
 
     // Property accessors
@@ -131,4 +133,11 @@ public class Book implements java.io.Serializable {
         this.orderitems = orderitems;
     }
 
+    public void setBigImage(String bigImage) {
+        this.bigImage = bigImage;
+    }
+
+    public String getBigImage() {
+        return bigImage;
+    }
 }

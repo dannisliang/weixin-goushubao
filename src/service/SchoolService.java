@@ -15,6 +15,9 @@ public class SchoolService {
 
         return schoolDao.getSchoolByServiceArea(said);
     }
+    public School getSchoolBySeller(int sellerId){
+        return schoolDao.getSchoolBySeller(sellerId);
+    }
 
     public void update(School school){
         schoolDao.update(school);

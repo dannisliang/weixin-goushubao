@@ -45,7 +45,6 @@
     <bean id="openIdAction" class="web.action.GetOpenidAction" scope="prototype"></bean>
     <!-- 微信 end -->
     <!-- 管理员 start -->
-    <bean id="sellerAction" class="web.action.SellerAction" scope="prototype"></bean>
     <!-- 管理员 end-->
     <!-- 城市 start-->
     <bean id="cityService" class="service.CityService">
@@ -71,13 +70,41 @@
         <property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
     <!--学校 end-->
+    <!--商家 start-->
+    <bean id="sellerAction" class="web.action.SellerAction" scope="prototype"></bean>
+    <bean id="sellerBookAction" class="web.action.SellerBookAction" scope="prototype"></bean>
     <bean id="sellerService" class="service.SellerService">
         <property name="sellerDao" ref="sellerDao"></property>
     </bean>
     <bean id="sellerDao" class="dao.SellerDao">
         <property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
+    <!--商家 end-->
+    <!--标准图书 start-->
 
+    <bean id="bookService" class="service.BookService">
+        <property name="bookDao" ref="bookDao"></property>
+    </bean>
+    <bean id="bookDao" class="dao.BookDao">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <!--标准图书 end-->
+    <!--上架图书管理-->
+    <bean id="salesBookService" class="service.SalesBookService">
+        <property name="salesBookDao" ref="salesBookDao"></property>
+    </bean>
+    <bean id="salesBookDao" class="dao.SalesBookDao">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <!--学院类别 start-->
+    <bean id="categoryService" class="service.CategoryService">
+        <property name="categoryDao" ref="categoryDao"></property>
+    </bean>
+    <bean id="categoryDao" class="dao.CategoryDao">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <!--学院类别 end-->
+    <!--上架图书 end-->
     <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"></property>
     </bean>

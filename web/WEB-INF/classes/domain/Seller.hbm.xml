@@ -20,7 +20,7 @@
             <column name="username" length="20" />
         </property>
         <property name="password" type="java.lang.String">
-            <column name="password" length="20" />
+            <column name="password" length="50" />
         </property>
        <property name="addr" type="java.lang.String">
            <column name="addr" length="50"></column>

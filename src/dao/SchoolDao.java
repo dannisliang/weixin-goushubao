@@ -28,14 +28,13 @@ public class SchoolDao extends HibernateDaoSupport {
         return school;
     }
 
-    public void update(School school){
-        this.getHibernateTemplate().update(school);
+    public School getSchoolBySeller(int sellerId){
+        String hql ="from School s where s.seller.id=?";
+        List<School> find = this.getHibernateTemplate().find(hql,sellerId);
+        return find.isEmpty()? null:find.get(0);
     }
 
-    public static void main(String[] args) {
-        String match = "^[A-Za-z0-9_]{6,14}[A-Za-z0-9_]$";
-        Pattern pattern = Pattern.compile(match);
-        Matcher matcher = pattern.matcher("sjdfsjfjs");
-        System.out.println(matcher.find());
+    public void update(School school){
+        this.getHibernateTemplate().update(school);
     }
 }

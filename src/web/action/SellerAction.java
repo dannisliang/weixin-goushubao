@@ -1,18 +1,10 @@
 package web.action;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.util.ValueStack;
-import domain.City;
 import domain.School;
 import domain.Seller;
-import domain.ServiceArea;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import netscape.javascript.JSObject;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
 import org.springframework.context.annotation.Scope;
@@ -26,7 +18,6 @@ import utils.YunCheck;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -92,7 +83,6 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
                    String json= CommonUtil.getJsonP("\"error\"",callback);
                     writer.write(json);
                 }
-
                 writer.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -103,8 +93,6 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
             }
             return INPUT;
         }
-        City findCity = cityService.getCityById(city);
-        ServiceArea findServiceArea = serviceAreaService.getServiceAreaById(serviceArea);
         School findSchool = schoolService.getSchoolById(school);
         String mark = seller.getMark();
         if(mark!=null) {
@@ -190,16 +178,22 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
     )
     public String login(){
         PrintWriter writer = this.getPrintWriter();
-        String match = "^[A-Za-z0-9_]{6,14}[A-Za-z0-9_]$";
-        Pattern pattern = Pattern.compile(match);
-
         if(seller.getUsername()==null||seller.getPassword()==null){
-            Matcher matcher = pattern.matcher(seller.getUsername());
-            if(matcher.find()){
             this.writeTouser(writer,"\"fieldError\"",callback);
             if(writer!=null){
                 writer.close();
               }
+                return INPUT;
+            }
+        //正则判断Username
+        String match = "^[A-Za-z0-9_]{5,14}[A-Za-z0-9_]$";
+        Pattern pattern = Pattern.compile(match);
+        Matcher matcher = pattern.matcher(seller.getUsername());
+        Matcher matcher1 = pattern.matcher(seller.getPassword());
+        if(!matcher.find()&&!matcher1.find()){
+            this.writeTouser(writer,"\"fieldError\"",callback);
+            if(writer!=null){
+                writer.close();
             }
             return INPUT;
         }
@@ -208,8 +202,16 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
             this.writeTouser(writer,"\"error\"",callback);
             if(writer!=null){
                 writer.close();
+
             }
             return "loginFailed";
+        }
+        //如果用户的准太等于零，那么表示这个商家还没有被认证，不能登录
+        if(existSeller.getState()==0){
+            this.writeTouser(writer,"\"stateError\"",callback);
+            if(writer!=null){
+                writer.close();
+            }
         }
         ServletActionContext.getRequest().getSession().setAttribute("seller", existSeller);
         this.writeTouser(writer, "\"success\"", callback);
