@@ -1,7 +1,9 @@
 package web.action;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.util.ValueStack;
 import domain.City;
 import domain.School;
 import domain.Seller;
@@ -26,6 +28,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -69,19 +73,65 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
     @Action(
             value = "apply",
             results = {
-                    @Result(name = "success",location = "/index.jsp")
+                    @Result(name = "success",type="json"),
+                    @Result(name="input",type="json")
             }
     )
     public String apply(){
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        PrintWriter writer = null;
+        System.out.println(school);
+        if(school==0||seller.getName()==null||seller.getUsername()==null||seller.getAddr()==null){
+            try {
+                writer = response.getWriter();
+                if(callback==null) {
+                    writer.write("\"error\"");
+                }else{
+                   String json= CommonUtil.getJsonP("\"error\"",callback);
+                    writer.write(json);
+                }
+
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                if (writer!=null){
+                    writer.close();
+                }
+            }
+            return INPUT;
+        }
         City findCity = cityService.getCityById(city);
         ServiceArea findServiceArea = serviceAreaService.getServiceAreaById(serviceArea);
         School findSchool = schoolService.getSchoolById(school);
         String mark = seller.getMark();
-        mark = mark.replaceAll("<","&lt;").replaceAll(">","&gt;");
-        seller.setMark(mark);
-        findSchool.setSeller(seller);
+        if(mark!=null) {
+            mark = mark.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+            seller.setMark(mark);
+        }
         sellerService.save(seller);
+        Seller find = sellerService.getSellerByTel(seller.getTel());
+        System.out.println(find.getId());
+        findSchool.setSeller(find);
         schoolService.update(findSchool);
+            try {
+                writer = response.getWriter();
+                if(callback==null) {
+                    writer.write("\"success\"");
+                }else{
+                    String json= CommonUtil.getJsonP("\"success\"",callback);
+                    writer.write(json);
+                }
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                if (writer!=null){
+                    writer.close();
+                }
+            }
         return SUCCESS;
     }
     /**
@@ -133,19 +183,39 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
     @Action(
             value = "login",
             results = {
-                    @Result(name = "success",location = "/index.jsp"),
-                    @Result(name = "input",location = "/WEB-INF/sellerPages/login.jsp"),
-                    @Result(name = "loginFailed",location = "/WEB-INF/sellerPages/login.jsp")
+                    @Result(name = "success",type="json"),
+                    @Result(name = "input",type="json"),
+                    @Result(name = "loginFailed",type="json")
             }
     )
     public String login(){
+        PrintWriter writer = this.getPrintWriter();
+        String match = "^[A-Za-z0-9_]{6,14}[A-Za-z0-9_]$";
+        Pattern pattern = Pattern.compile(match);
+
+        if(seller.getUsername()==null||seller.getPassword()==null){
+            Matcher matcher = pattern.matcher(seller.getUsername());
+            if(matcher.find()){
+            this.writeTouser(writer,"\"fieldError\"",callback);
+            if(writer!=null){
+                writer.close();
+              }
+            }
+            return INPUT;
+        }
         Seller existSeller = sellerService.getSellerByUnamePwd(seller);
         if(existSeller == null){
-            this.addActionMessage("账号或者密码错误");
-            this.addActionError("账号或者密码错误");
+            this.writeTouser(writer,"\"error\"",callback);
+            if(writer!=null){
+                writer.close();
+            }
             return "loginFailed";
         }
         ServletActionContext.getRequest().getSession().setAttribute("seller", existSeller);
+        this.writeTouser(writer, "\"success\"", callback);
+        if(writer!=null){
+            writer.close();
+        }
         return SUCCESS;
     }
 
@@ -300,7 +370,7 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
             }
     )
 
-    public String  getServiceAreaBycity(){
+    public String  getServiceAreaByCity(){
         Map<String ,String > find = serviceAreaService.getServiceAreaByCity(city);
         HttpServletResponse response = ServletActionContext.getResponse();
         response.setCharacterEncoding("UTF-8");
@@ -361,12 +431,33 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
         return SUCCESS;
     }
 
+    private void writeTouser(PrintWriter writer,String json,String callback){
+        if(callback==null){
+            writer.write(json);
+        }else{
+            String s = CommonUtil.getJsonP(json,callback);
+            writer.write(s);
+        }
+        writer.flush();
+    }
+    private PrintWriter getPrintWriter(){
+        HttpServletResponse response = ServletActionContext.getResponse();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        PrintWriter writer= null;
+        try {
+            writer = response.getWriter();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return writer;
+    }
+
     @Override
     public Seller getModel() {
         return seller;
     }
     //properties
-
 
     public void setSchool(int school) {
         this.school = school;

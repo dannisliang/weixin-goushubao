@@ -9,9 +9,13 @@ import domain.Seller;
 public class SellerService {
     private SellerDao sellerDao;
 
-    /**
-     * 保存seller
-     */
+    public Seller getSellerByTel(String tel) {
+            return sellerDao.getSellerByTel(tel);
+    }
+
+        /**
+         * 保存seller
+         */
     public void save(Seller seller){
         sellerDao.save(seller);
     }

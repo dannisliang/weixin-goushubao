@@ -28,6 +28,11 @@ public class SellerDao extends HibernateDaoSupport {
         this.getHibernateTemplate().save(seller);
     }
 
+    public Seller getSellerByTel(String tel){
+        String hql = "from Seller where tel=?";
+        List<Seller> find = this.getHibernateTemplate().find(hql,tel);
+        return find.isEmpty()? null:find.get(0);
+    }
     /**
      * 验证数据库有没有手机号
      */

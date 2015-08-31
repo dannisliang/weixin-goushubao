@@ -6,6 +6,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Lixiao on 8/30/2015.
@@ -30,4 +32,10 @@ public class SchoolDao extends HibernateDaoSupport {
         this.getHibernateTemplate().update(school);
     }
 
+    public static void main(String[] args) {
+        String match = "^[A-Za-z0-9_]{6,14}[A-Za-z0-9_]$";
+        Pattern pattern = Pattern.compile(match);
+        Matcher matcher = pattern.matcher("sjdfsjfjs");
+        System.out.println(matcher.find());
+    }
 }
