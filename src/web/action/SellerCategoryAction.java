@@ -55,12 +55,23 @@ public class SellerCategoryAction extends ActionSupport implements ModelDriven<C
     public String addCategory(){
         Seller seller = (Seller)ServletActionContext.getRequest().getSession().getAttribute("seller");
         School school = schoolService.getSchoolBySeller(seller.getId());
-        categoryService.save(category.getName(),school);
+        Category find = categoryService.save(category.getName(), school);
         PrintWriter writer = getPrintWriter();
+        if(find==null){
+            if(callback==null){
+                writer.write("\"error\"");
+            }else {
+                writeTouser(writer,"\"error\"",callback);
+            }
+            writer.flush();
+            if(writer!=null) writer.close();
+        }
+        String json = JSONObject.fromObject(find,getConfig()).toString();
+
         if(callback==null){
-            writer.write("\""+"success"+"\"");
+            writer.write(json);
         }else {
-            writeTouser(writer,"\""+"success"+"\"",callback);
+            writeTouser(writer,json,callback);
         }
         writer.flush();
         if(writer!=null) writer.close();
@@ -94,16 +105,28 @@ public class SellerCategoryAction extends ActionSupport implements ModelDriven<C
                     @Result(name="success",type = "json")
             }
     )
-    public String updateCategoty(){
+    public String updateCategoty  (){
         Seller seller = (Seller)ServletActionContext.getRequest().getSession().getAttribute("seller");
         School school = schoolService.getSchoolBySeller(seller.getId());
         Category result = categoryService.update(category.getId(), category.getName(), school.getId());
-        String json = JSONObject.fromObject(result,getConfig()).toString();
         PrintWriter writer = getPrintWriter();
+
+        if (result==null){
+            if(callback==null){
+                writer.write("\"error\"");
+            }else {
+                writeTouser(writer,"\"error\"",callback);
+            }
+            writer.flush();
+            if(writer!=null) writer.close();
+        }
+        String json = JSONObject.fromObject(result,getConfig()).toString();
+        System.out.println(json);
+
         if(callback==null){
-            writer.write("\""+json+"\"");
+            writer.write(json);
         }else {
-            writeTouser(writer,"\""+json+"\"",callback);
+            writeTouser(writer,json,callback);
         }
         writer.flush();
         if(writer!=null) writer.close();

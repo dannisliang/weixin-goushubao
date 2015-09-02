@@ -29,11 +29,16 @@ public class CategoryDao extends HibernateDaoSupport {
         List<Category> find = this.getHibernateTemplate().find(hql,name);
         if(!find.isEmpty()){
             hql="from SchoolCategory s where s.category.id=? and s.school.id=?";
-            List<SchoolCategory> find1 = this.getHibernateTemplate().find(hql,cid,sid);
-            result = find.get(0);
-            if (!find1.isEmpty()){
-                find1.get(0).setCategory(result);
-                this.getHibernateTemplate().update(find1.get(0));
+            List<SchoolCategory> find1 = this.getHibernateTemplate().find(hql,find.get(0).getId(),sid);
+            if(!find1.isEmpty()){
+
+            }else {
+                find1 = this.getHibernateTemplate().find(hql, cid, sid);
+                result = find.get(0);
+                if (!find1.isEmpty()) {
+                    find1.get(0).setCategory(result);
+                    this.getHibernateTemplate().update(find1.get(0));
+                }
             }
         }else{
             Category category = new Category();
@@ -61,23 +66,31 @@ public class CategoryDao extends HibernateDaoSupport {
         }
     }
 
-     public void save(String name, School school){
+     public Category save(String name, School school){
+         Category result = null;
          String hql = "from Category where name=?";
          List<Category> find= this.getHibernateTemplate().find(hql,name);
          if(!find.isEmpty()){
              Category category = find.get(0);
              hql="from SchoolCategory s where s.category.id=? and s.school.id=?";
-                 List<SchoolCategory> find1 = this.getHibernateTemplate().find(hql,category.getId(),school.getId());
-                 if(find1.isEmpty()){
-                 SchoolCategory sc = new SchoolCategory();
-                 sc.setSchool(school);
-                 sc.setCategory(category);
-                 this.getHibernateTemplate().save(sc);
+             List<SchoolCategory> find1 = this.getHibernateTemplate().find(hql,find.get(0).getId(),school.getId());
+             if(!find1.isEmpty()){
+
+             }else {
+                 result = category;
+                 find1 = this.getHibernateTemplate().find(hql, category.getId(), school.getId());
+                 if (find1.isEmpty()) {
+                     SchoolCategory sc = new SchoolCategory();
+                     sc.setSchool(school);
+                     sc.setCategory(category);
+                     this.getHibernateTemplate().save(sc);
+                 }
              }
          }else {
              Category category = new Category();
              category.setName(name);
              this.getHibernateTemplate().save(category);
+             result = category;
              hql="from SchoolCategory s where s.category.id=? and s.school.id=?";
              List<SchoolCategory> find1 = this.getHibernateTemplate().find(hql,category.getId(),school.getId());
              if(find1.isEmpty()){
@@ -87,5 +100,6 @@ public class CategoryDao extends HibernateDaoSupport {
                  this.getHibernateTemplate().save(sc);
              }
          }
+         return result;
      }
 }

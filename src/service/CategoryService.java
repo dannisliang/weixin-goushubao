@@ -15,8 +15,8 @@ public class CategoryService {
         return categoryDao.getCategories(school);
     }
 
-    public void save(String name, School school){
-        categoryDao.save(name,school);
+    public Category save(String name, School school){
+        return categoryDao.save(name,school);
     }
 
     public void del(int cid,int sid){

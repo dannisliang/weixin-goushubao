@@ -10,13 +10,13 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="book" class="domain.Book" fetch="select">
+        <many-to-one name="book" class="domain.Book" fetch="select" lazy="false">
             <column name="bid" length="20" />
         </many-to-one>
-        <many-to-one name="salesBook" class="domain.SalesBook" fetch="select">
+        <many-to-one name="salesBook" class="domain.SalesBook" fetch="select" lazy="false">
             <column name="sbid" />
         </many-to-one>
-        <many-to-one name="orders" class="domain.Orders" fetch="select">
+        <many-to-one name="orders" class="domain.Orders" fetch="select" lazy="false">
             <column name="oid" />
         </many-to-one>
         <property name="isOld" type="java.lang.Integer">

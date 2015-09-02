@@ -21,7 +21,7 @@ public class Book implements java.io.Serializable {
     private Set subscribeItems = new HashSet(0);
     private Set salesBooks = new HashSet(0);
     private Set cartitems = new HashSet(0);
-    private Set orderitems = new HashSet(0);
+    private Set orderitemes = new HashSet(0);
 
     // Constructors
 
@@ -37,7 +37,7 @@ public class Book implements java.io.Serializable {
     /** full constructor */
     public Book(String isbn, String title, String publisher, String author,
                 Double price, String image, Set subscribeItems, Set salesBooks,
-                Set cartitems, Set orderitems,String bigImage) {
+                Set cartitemes, Set orderitems,String bigImage) {
         this.isbn = isbn;
         this.title = title;
         this.publisher = publisher;
@@ -47,7 +47,7 @@ public class Book implements java.io.Serializable {
         this.subscribeItems = subscribeItems;
         this.salesBooks = salesBooks;
         this.cartitems = cartitems;
-        this.orderitems = orderitems;
+        this.orderitemes = orderitemes;
         this.bigImage = bigImage;
     }
 
@@ -125,12 +125,12 @@ public class Book implements java.io.Serializable {
         this.cartitems = cartitems;
     }
 
-    public Set getOrderitems() {
-        return this.orderitems;
+    public Set getOrderitemes() {
+        return this.orderitemes;
     }
 
-    public void setOrderitems(Set orderitems) {
-        this.orderitems = orderitems;
+    public void setOrderitemes(Set orderitemes) {
+        this.orderitemes = orderitemes;
     }
 
     public void setBigImage(String bigImage) {

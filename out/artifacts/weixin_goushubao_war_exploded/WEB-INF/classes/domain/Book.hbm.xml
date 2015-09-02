@@ -34,7 +34,7 @@
             </key>
             <one-to-many class="domain.SubscribeItem" />
         </set>
-        <set name="salesBooks" inverse="true">
+        <set name="salesBooks" inverse="true" >
             <key>
                 <column name="bid" length="20" />
             </key>
@@ -46,7 +46,7 @@
             </key>
             <one-to-many class="domain.Cartitem" />
         </set>
-        <set name="orderitems" inverse="true">
+        <set name="orderitemes" inverse="true">
             <key>
                 <column name="bid" length="20" />
             </key>

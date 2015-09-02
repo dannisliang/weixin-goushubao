@@ -10,7 +10,7 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="orderAddr" class="domain.OrderAddr" fetch="select">
+        <many-to-one name="orderAddr" class="domain.OrderAddr" fetch="select" lazy="false">
             <column name="oaid" />
         </many-to-one>
         <many-to-one name="user" class="domain.User" fetch="select">
@@ -36,7 +36,7 @@
         <property name="date" type="java.lang.String">
             <column name="date" length="30" />
         </property>
-        <set name="orderitems" inverse="true">
+        <set name="orderitems" inverse="true" lazy="false">
             <key>
                 <column name="oid" />
             </key>

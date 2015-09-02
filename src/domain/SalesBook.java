@@ -21,7 +21,7 @@ public class SalesBook implements java.io.Serializable {
     private Float discount;
     private Set subscribeItems = new HashSet(0);
     private Set cartitems = new HashSet(0);
-    private Set orderitems = new HashSet(0);
+    private Set orderitemes = new HashSet(0);
 
     // Constructors
 
@@ -32,7 +32,7 @@ public class SalesBook implements java.io.Serializable {
     /** full constructor */
     public SalesBook(Book book, Category category, Seller seller, Integer num,
                      Double price, String shelfTime, Float discount, Set subscribeItems,
-                     Set cartitems, Set orderitems) {
+                     Set cartitems, Set orderitemes) {
         this.book = book;
         this.category = category;
         this.seller = seller;
@@ -42,7 +42,7 @@ public class SalesBook implements java.io.Serializable {
         this.discount = discount;
         this.subscribeItems = subscribeItems;
         this.cartitems = cartitems;
-        this.orderitems = orderitems;
+        this.orderitemes = orderitemes;
     }
 
     // Property accessors
@@ -127,12 +127,12 @@ public class SalesBook implements java.io.Serializable {
         this.cartitems = cartitems;
     }
 
-    public Set getOrderitems() {
-        return this.orderitems;
+    public Set getOrderitemes() {
+        return this.orderitemes;
     }
 
-    public void setOrderitems(Set orderitems) {
-        this.orderitems = orderitems;
+    public void setOrderitemes(Set orderitemes) {
+        this.orderitemes = orderitemes;
     }
 
 }

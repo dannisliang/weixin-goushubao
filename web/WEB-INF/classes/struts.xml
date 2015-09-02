@@ -5,8 +5,9 @@
 
 <struts>
     <constant name="struts.devMode" value="true" />
-    <constant name="struts.convention.classes.reload" value="true" />  
-   <constant name="struts.custom.i18n.resources" value="message"></constant>
+    <constant name="struts.convention.classes.reload" value="true" />
+    <constant name="struts.i18n.encoding" value="utf-8"></constant>
+    <constant name="struts.custom.i18n.resources" value="message"></constant>
    <constant name="struts.multipart.saveDir" value="/tmp"/>
    <package name="seller-default" namespace="seller" extends="json-default">
    	<!--	<interceptors>
