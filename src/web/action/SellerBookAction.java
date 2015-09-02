@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 /**
+ * 这个类主要做的操作是图书管理
  * Created by Lixiao on 8/31/2015.
  */
 @Scope("prototype")
@@ -103,42 +104,12 @@ public class SellerBookAction extends ActionSupport implements ModelDriven<Sales
         return SUCCESS;
     }
 
-    /**
-     * 获得当前学校的学院类别
-     * @return
-     */
-    @Action(
-            value = "getCategories",
-            results = {
-                    @Result(name = "success",type = "json")
-            }
-    )
-    public String  getCategories(){
-        HttpSession session = ServletActionContext.getRequest().getSession();
-        String discount = (String)session.getAttribute("discount");
-        String category = (String)session.getAttribute("category");
-        if(discount==null ||discount!=salesBook.getDiscount().toString()){
-            session.setAttribute("discount",salesBook.getDiscount().toString());
-        }
-        if(category==null || Integer.parseInt(category)!=categoryId){
-            session.setAttribute("category",categoryId);
-        }
-        Seller seller = (Seller)ServletActionContext.getRequest().getSession().getAttribute("seller");
-        School school = schoolService.getSchoolBySeller(seller.getId());
-        List<Category> categories=categoryService.getCategories(school.getId());
-        PrintWriter writer = this.getPrintWriter();
-        String json = JSONArray.fromObject(categories,getConfig()).toString();
-        if(callback==null){
-            writer.write(json);
-        }else {
-            writeTouser(writer, json, callback);
-        }
-        writer.flush();
-        if (writer!=null)writer.close();
-        return SUCCESS;
-    }
 
 
+
+
+
+// private function()
     private void writeTouser(PrintWriter writer,String json,String callback){
         if(callback==null){
             writer.write(json);

@@ -5,6 +5,9 @@ import com.opensymphony.xwork2.ModelDriven;
 import domain.School;
 import domain.Seller;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
 import org.springframework.context.annotation.Scope;
@@ -16,6 +19,7 @@ import utils.CommonUtil;
 import utils.YunCheck;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
@@ -46,7 +50,132 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
     private CityService cityService;
     private ServiceAreaService serviceAreaService;
     private SchoolService schoolService;
+    private File uploadHI;
+    private String uploadHIFileName;
+    private String uploadHIFileContentType;
     /**
+     * 用户基本信息操作
+     */
+    @Action(
+            value = "getSeller",
+            results = {
+                    @Result(name = "success",type = "json")
+            }
+    )
+    public String getSeller(){
+        Seller find = (Seller)ServletActionContext.getRequest().getSession().getAttribute("seller");
+        find = sellerService.getSellerByTel(find.getTel());
+        String tel = find.getTel();
+        String phone = tel.substring(0,3)+"****"+tel.substring(7);
+        find.setTel(phone);
+        String username = find.getUsername();
+        if(username!=null) find.setUsername(username.substring(0,1)+"*");
+        String json = JSONObject.fromObject(find,getConfig()).toString();
+        PrintWriter writer = getPrintWriter();
+        if(callback==null){
+            writer.write(json);
+        }else {
+            writeTouser(writer,json,callback);
+        }
+        if(writer!=null) writer.close();
+        return SUCCESS;
+    }
+
+    /**
+     * 改变HeadImage
+     */
+    /**
+     * 上传headImage
+     */
+    @Action(
+            value = "uploadHeadImage",
+            results = {
+                    @Result(name="success",type = "json")
+            }
+    )
+    public String uploadHeadImage(){
+
+        return SUCCESS;
+    }
+
+    /**
+     * 保存修改过的信息
+     */
+    @Action(
+            value = "success",
+            results = {
+                    @Result(name="success",type = "json")
+            }
+    )
+    public String sellerUpdate(){
+        sellerService.update(seller);
+        PrintWriter writer = getPrintWriter();
+        if(callback==null) {
+            writer.write("\"success\"");
+        }else{
+            writeTouser(writer,"\"success\"",callback);
+        }
+        writer.flush();
+        if(writer!=null) writer.close();
+        return SUCCESS;
+    }
+    /**
+     * 修改密码
+     */
+    @Action(
+            value = "updatePassword",
+            results = {
+                    @Result(name="success",type = "json")
+            }
+    )
+    public String updatePassword(){
+        boolean result = sellerService.updatePassword(seller);
+        PrintWriter writer = getPrintWriter();
+        if(result){
+            if(callback==null) {
+                writer.write("\"error\"");
+            }else{
+                writeTouser(writer,"\"error\"",callback);
+            }
+            writer.flush();
+            if(writer!=null) writer.close();
+        }
+        if(callback==null) {
+            writer.write("\"success\"");
+        }else{
+            writeTouser(writer,"\"success\"",callback);
+        }
+        writer.flush();
+        if(writer!=null) writer.close();
+
+        return SUCCESS;
+    }
+
+    /**
+     * 获取手机验证码
+     */
+    @Action(
+            value = "getTelCode",
+            results = {
+                    @Result(name = "success",type = "json")
+            }
+    )
+    public String getTelCode(){
+        PrintWriter writer = getPrintWriter();
+        String code = YunCheck.sendVoiceToPhone(seller.getTel());
+        ServletActionContext.getRequest().getSession().setAttribute("code",code);
+            if(callback==null){
+                writer.write("\""+"success"+"\"");
+            }else{
+               writeTouser(writer,"\""+"success"+"\"",callback);
+            }
+            writer.flush();
+
+        if(writer!=null)writer.close();
+        return SUCCESS;
+    }
+    /**
+     *
      * 注册页面
      */
     @Action(
@@ -178,7 +307,7 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
     )
     public String login(){
         PrintWriter writer = this.getPrintWriter();
-        if(seller.getUsername()==null||seller.getPassword()==null){
+        if(seller.getTel()==null||seller.getPassword()==null){
             this.writeTouser(writer,"\"fieldError\"",callback);
             if(writer!=null){
                 writer.close();
@@ -188,7 +317,7 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
         //正则判断Username
         String match = "^[A-Za-z0-9_]{5,14}[A-Za-z0-9_]$";
         Pattern pattern = Pattern.compile(match);
-        Matcher matcher = pattern.matcher(seller.getUsername());
+        Matcher matcher = pattern.matcher(seller.getTel());
         Matcher matcher1 = pattern.matcher(seller.getPassword());
         if(!matcher.find()&&!matcher1.find()){
             this.writeTouser(writer,"\"fieldError\"",callback);
@@ -202,13 +331,12 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
             this.writeTouser(writer,"\"error\"",callback);
             if(writer!=null){
                 writer.close();
-
             }
             return "loginFailed";
         }
         //如果用户的准太等于零，那么表示这个商家还没有被认证，不能登录
         if(existSeller.getState()==0){
-            this.writeTouser(writer,"\"stateError\"",callback);
+            this.writeTouser(writer, "\"stateError\"", callback);
             if(writer!=null){
                 writer.close();
             }
@@ -237,16 +365,23 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
         HttpServletResponse response = ServletActionContext.getResponse();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
+        String match = "^[0-9]{5}[0-9]$";
+        Pattern pattern = Pattern.compile(match);
+        Matcher matcher = pattern.matcher(checkCode);
         PrintWriter writer = null;
         try {
             writer = response.getWriter();
-            if(null!=code){
-                if(code==checkCode){
+            if(null!=code&& matcher.find()){
+                if(Integer.parseInt(code)==Integer.parseInt(checkCode)){
                     if(callback==null){
                         writer.write("\""+"Y"+"\"");
                     }else{
                         String s = CommonUtil.getJsonP("\""+"Y"+"\"",callback);
                         writer.write(s);
+                        if(writer!=null){
+                            writer.flush();
+                            writer.close();
+                        }
                     }
                     return SUCCESS;
                 }
@@ -433,6 +568,16 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
         return SUCCESS;
     }
 
+    private JsonConfig getConfig(){
+        JsonConfig config = new JsonConfig();
+        config.setIgnoreDefaultExcludes(false);
+        config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+        config.setExcludes(new String[]{
+                "cartitems", "orderitems", "salesBooks", "subscribeItems", "salesBooks", "schoolCategories"
+                ,"feedbacks","orderses","schools","password"
+        });
+        return config;
+    }
     private void writeTouser(PrintWriter writer,String json,String callback){
         if(callback==null){
             writer.write(json);
@@ -455,7 +600,23 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
         return writer;
     }
 
+
+    public void setUploadHI(File uploadHI) {
+        this.uploadHI = uploadHI;
+    }
+
+
+    public void setUploadHIFileName(String uploadHIFileName) {
+        this.uploadHIFileName = uploadHIFileName;
+    }
+
+
+    public void setUploadHIFileContentType(String uploadHIFileContentType) {
+        this.uploadHIFileContentType = uploadHIFileContentType;
+    }
+
     @Override
+
     public Seller getModel() {
         return seller;
     }

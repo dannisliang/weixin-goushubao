@@ -13,6 +13,20 @@ public class SellerService {
             return sellerDao.getSellerByTel(tel);
     }
 
+    /**
+     * updte seller's tel
+     */
+    public boolean updatePassword(Seller seller){
+        return sellerDao.updatePassword(seller);
+    }
+    /**
+     * update seller
+     */
+
+    public void update(Seller seller){
+        sellerDao.update(seller);
+    }
+
         /**
          * 保存seller
          */

@@ -9,14 +9,49 @@ import java.util.List;
  * Created by Lixiao on 8/28/2015.
  */
 public class SellerDao extends HibernateDaoSupport {
+
+    /**
+     * 更改用户的密码
+     */
+    public boolean updatePassword(Seller seller){
+        boolean result = false;
+        Seller find = this.getHibernateTemplate().get(Seller.class,seller.getId());
+        if(find!=null){
+            if(seller.getPassword()!=null){
+                find.setPassword(seller.getPassword());
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 更新用户信息
+     */
+    public void update(Seller seller){
+        Seller find = this.getHibernateTemplate().get(Seller.class,seller.getId());
+        if(find!=null){
+            if(seller.getUsername()!=null){
+                find.setUsername(seller.getUsername());
+            }
+            if(seller.getName()!=null){
+                find.setName(seller.getName());
+            }
+            if(seller.getAddr()!=null){
+                find.setName(seller.getName());
+            }
+            this.getHibernateTemplate().update(find);
+        }
+    }
+
     /**
      * 得到seller
      * @param seller
      * @return
      */
     public Seller getSellerByUnamePwd(Seller seller){
-        String hql = "from Seller where username=? and password=?";
-        List<Seller> find = this.getHibernateTemplate().find(hql,seller.getUsername(),seller.getPassword());
+        String hql = "from Seller where tel=? and password=?";
+        List<Seller> find = this.getHibernateTemplate().find(hql,seller.getTel(),seller.getPassword());
         return find.isEmpty()? null:find.get(0);
     }
 

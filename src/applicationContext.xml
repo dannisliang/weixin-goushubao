@@ -73,6 +73,8 @@
     <!--商家 start-->
     <bean id="sellerAction" class="web.action.SellerAction" scope="prototype"></bean>
     <bean id="sellerBookAction" class="web.action.SellerBookAction" scope="prototype"></bean>
+    <bean id="sellerCategoryAction" class="web.action.SellerCategoryAction" scope="prototype"></bean>
+
     <bean id="sellerService" class="service.SellerService">
         <property name="sellerDao" ref="sellerDao"></property>
     </bean>

@@ -20,6 +20,7 @@ public class Seller implements java.io.Serializable {
     private String tel;
     private String mark;
     private String addr;
+    private String headImage;
     private Set salesBooks = new HashSet(0);
     private Set orderses = new HashSet(0);
     private Set feedbacks = new HashSet(0);
@@ -32,7 +33,7 @@ public class Seller implements java.io.Serializable {
 
     /** full constructor */
     public Seller( String username, String password,
-                  Set salesBooks, Set orderses, Set feedbacks,String licenceImage,int state,String name,String mark,
+                  Set salesBooks, Set orderses, Set feedbacks,String headImage,int state,String name,String mark,
                   String addr) {
         this.username = username;
         this.password = password;
@@ -43,6 +44,7 @@ public class Seller implements java.io.Serializable {
         this.name = name;
         this.mark = mark;
         this.addr = addr;
+        this.headImage = headImage;
     }
 
     // Property accessors
@@ -118,6 +120,14 @@ public class Seller implements java.io.Serializable {
 
     public void setSalesBooks(Set salesBooks) {
         this.salesBooks = salesBooks;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+    }
+
+    public String getHeadImage() {
+        return headImage;
     }
 
     public Set getOrderses() {

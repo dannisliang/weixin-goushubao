@@ -31,6 +31,9 @@
         <property name="name" type="java.lang.String">
             <column name="name"></column>
         </property>
+        <property name="headImage" type="java.lang.String">
+            <column name="head_image" length="50"></column>
+        </property>
         <property name="tel" type="java.lang.String">
             <column name="tel"></column>
         </property>
