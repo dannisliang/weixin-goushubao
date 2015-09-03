@@ -137,7 +137,7 @@ public class SellerBookAction extends ActionSupport implements ModelDriven<Sales
         config.setIgnoreDefaultExcludes(false);
         config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
         config.setExcludes(new String[]{
-            "cartitems","orderitems","salesBooks","subscribeItems","salesBooks","schoolCategories"
+            "cartitems","orderitems","salesBooks","subscribeItems","salesBooks","schoolCategories","orderitemes"
         });
         return config;
     }

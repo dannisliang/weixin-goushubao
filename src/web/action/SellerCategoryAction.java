@@ -198,7 +198,7 @@ public class SellerCategoryAction extends ActionSupport implements ModelDriven<C
         config.setIgnoreDefaultExcludes(false);
         config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
         config.setExcludes(new String[]{
-                "cartitems", "orderitems", "salesBooks", "subscribeItems", "salesBooks", "schoolCategories"
+                "cartitems", "orderitems","orderitemes", "salesBooks", "subscribeItems", "salesBooks", "schoolCategories"
         });
         return config;
     }

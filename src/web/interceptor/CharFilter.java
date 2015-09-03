@@ -24,13 +24,10 @@ public class CharFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
         String encoding = this.filterConfig.getInitParameter("encoding");
-        System.out.println(encoding);
-        System.out.println("SDJUSDHFIUSDHFUDSHU");
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse resp = (HttpServletResponse) response;
         request.setCharacterEncoding(encoding);
-        resp.setContentType("text/html;charset="+encoding);
-        System.out.println(request.getQueryString());
+        resp.setContentType("text/html;charset=" + encoding);
         // 处理GET参数
         if (request.getMethod().equalsIgnoreCase("get")) {
             Map paramMap = req.getParameterMap();
@@ -41,6 +38,7 @@ public class CharFilter implements Filter {
             for (int i = 0; i < queryStringArray.length; i++) {
                 queryStringArray[i] = queryStringArray[i].replaceAll("(.*)=(.*)", "$1");
             }
+            System.out.println("jjsdjfs");
             Set<String> keySet = paramMap.keySet();
             for (String key : keySet) {
                 // check where param from

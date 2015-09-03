@@ -68,7 +68,6 @@ public class SellerOrderAction extends ActionSupport implements ModelDriven<Orde
             }
     )
     public String changeOrderState(){
-        orderService.updateState(order);
         return SUCCESS;
     }
     //functions

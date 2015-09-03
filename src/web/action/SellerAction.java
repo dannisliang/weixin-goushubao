@@ -8,6 +8,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
 import org.springframework.context.annotation.Scope;
@@ -16,6 +17,7 @@ import service.SchoolService;
 import service.SellerService;
 import service.ServiceAreaService;
 import utils.CommonUtil;
+import utils.OperateImage;
 import utils.YunCheck;
 
 import javax.servlet.http.HttpServletResponse;
@@ -53,6 +55,11 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
     private File uploadHI;
     private String uploadHIFileName;
     private String uploadHIFileContentType;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
+
     /**
      * 用户基本信息操作
      */
@@ -81,21 +88,84 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
         return SUCCESS;
     }
 
-    /**
-     * 改变HeadImage
-     */
+
+
+
     /**
      * 上传headImage
      */
     @Action(
             value = "uploadHeadImage",
             results = {
-                    @Result(name="success",type = "json")
+                    @Result(name="success",type = "json"),
+                    @Result(name="error",type = "json"),
+                    @Result(name = "imageError",type = "json")
             }
     )
     public String uploadHeadImage(){
-
-        return SUCCESS;
+        String[] str = { ".jpg", ".jpeg", ".bmp", ".gif" };
+        PrintWriter writer = getPrintWriter();
+        // 获取用户登录名
+        Seller currentSeller = (Seller)ServletActionContext.getRequest().getSession().getAttribute("seller");
+        // 限定文件大小是4MB
+        if (uploadHI == null || uploadHI.length() > 4194304) {
+            //文件过大
+            if(callback==null) {
+                writer.write("\""+"0"+"\"");
+            }else{
+                writeTouser(writer,"\""+"0"+"\"",callback);
+            }
+            writer.flush();
+            if(writer!=null) writer.close();
+            return "error";
+        }
+        for (String s : str) {
+            if (uploadHIFileName.endsWith(s)) {
+                String realPath = ServletActionContext.getServletContext().getRealPath("/headImage");// 在tomcat中保存图片的实际路径  ==  "webRoot/uploadpic/"
+                String name = CommonUtil.UUID16()+".jpg";
+                File saveFile = new File(new File(realPath), name); // 在该实际路径下实例化一个文件
+                // 判断父目录是否存在
+                if (!saveFile.getParentFile().exists()) {
+                    saveFile.getParentFile().mkdirs();
+                }
+                try {
+                    // 执行文件上传
+                    // FileUtils 类名 org.apache.commons.io.FileUtils;
+                    // 是commons-io包中的，commons-fileupload 必须依赖
+                    // commons-io包实现文件上次，实际上就是将一个文件转换成流文件进行读写
+                    FileUtils.copyFile(uploadHI, saveFile);
+                    OperateImage image = new OperateImage();
+                    image.setX(x);image.setY(y);image.setHeight(height);image.setWidth(width);image.setSrcpath(realPath + "/" + name);
+                    image.setSubpath(realPath + "/" + name);
+                    image.cut();
+                    if(callback==null) {
+                        writer.write("\""+realPath+"/"+name+"\"");
+                    }else{
+                        writeTouser(writer,"\""+realPath+"/"+name+"\"",callback);
+                    }
+                    writer.flush();
+                    if(writer!=null) writer.close();
+                    return SUCCESS;
+                } catch (IOException e) {
+                    if(callback==null) {
+                        writer.write("\""+"1"+"\"");
+                    }else{
+                        writeTouser(writer,"\""+"1"+"\"",callback);
+                    }
+                    writer.flush();
+                    if(writer!=null) writer.close();
+                    return "imageError";
+                }
+            }
+        }
+        if(callback==null) {
+            writer.write("\""+"2"+"\"");
+        }else{
+            writeTouser(writer,"\""+"2"+"\"",callback);
+        }
+        writer.flush();
+        if(writer!=null) writer.close();
+        return ERROR;
     }
 
     /**
@@ -222,12 +292,34 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
             }
             return INPUT;
         }
+        Seller findSeller = sellerService.getSellerByTel(seller.getTel());
+        if(findSeller!=null){
+            try {
+                writer = response.getWriter();
+                if(callback==null) {
+                    writer.write("\"error0\"");
+                }else{
+                    String json= CommonUtil.getJsonP("\"error0\"",callback);
+                    writer.write(json);
+                }
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                if (writer!=null){
+                    writer.close();
+                }
+            }
+            return INPUT;
+        }
         School findSchool = schoolService.getSchoolById(school);
         String mark = seller.getMark();
         if(mark!=null) {
             mark = mark.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
             seller.setMark(mark);
         }
+        String secret = CommonUtil.getSecretByMd5(seller.getTel());
+        seller.setPassword(secret);
         sellerService.save(seller);
         Seller find = sellerService.getSellerByTel(seller.getTel());
         System.out.println(find.getId());
@@ -652,6 +744,22 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
 
     public void setServiceAreaService(ServiceAreaService serviceAreaService) {
         this.serviceAreaService = serviceAreaService;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 
     public void setSchoolService(SchoolService schoolService) {

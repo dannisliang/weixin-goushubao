@@ -1,0 +1,1 @@
+module.exports=function(n){return{area:function(){return n*n}}};
