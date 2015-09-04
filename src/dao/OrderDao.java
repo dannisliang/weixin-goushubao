@@ -13,6 +13,30 @@ import java.util.List;
 public class OrderDao extends HibernateDaoSupport {
 
     /**
+     * 改变order的状态
+     */
+    public boolean changeOrderState(Orders order){
+        boolean result = false;
+        Orders find = this.getHibernateTemplate().get(Orders.class,order.getId());
+        System.out.println(find.getState());
+                if(find.getState()==0) {
+                    if (order.getState() == 1) {
+                        find.setState(1);
+                        this.getHibernateTemplate().update(find);
+                        result = true;
+                    }
+                }
+                if (find.getState()==1){
+                    if(order.getState()==2||order.getState()==3){
+                        find.setState(order.getState());
+                        this.getHibernateTemplate().update(find);
+                        result =true;
+                    }
+                }
+
+        return result;
+    }
+    /**
      * 获取这个状态的总数
      * @param state
      * @param sid

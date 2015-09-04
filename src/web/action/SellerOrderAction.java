@@ -68,6 +68,28 @@ public class SellerOrderAction extends ActionSupport implements ModelDriven<Orde
             }
     )
     public String changeOrderState(){
+        boolean result = orderService.changeOrderState(order);
+        PrintWriter writer = getPrintWriter();
+        System.out.println(order.getState());
+        System.out.println(order.getId());
+        if(result){
+            if(callback==null){
+                writer.write("\"success\"");
+            }else{
+                writeTouser(writer,"\"success\"",callback);
+            }
+        }else{
+            if(callback==null){
+                writer.write("\"error\"");
+            }else{
+                writeTouser(writer,"\"error\"",callback);
+            }
+        }
+        if(writer!=null){
+            writer.flush();
+            writer.close();
+        }
+
         return SUCCESS;
     }
     //functions

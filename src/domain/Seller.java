@@ -13,7 +13,7 @@ public class Seller implements java.io.Serializable {
 
     private Integer id;
     private String name;
-    private Set<School> schools;
+    private Set<School> school;
     private String username;
     private String password;
     private int state;
@@ -82,8 +82,8 @@ public class Seller implements java.io.Serializable {
         this.id = id;
     }
 
-    public Set<School> getSchools() {
-        return schools;
+    public Set<School> getSchool() {
+        return school;
     }
 
     public String getAddr() {
@@ -94,8 +94,8 @@ public class Seller implements java.io.Serializable {
         this.addr = addr;
     }
 
-    public void setSchools(Set<School> schools) {
-        this.schools = schools;
+    public void setSchool(Set<School> school) {
+        this.school = school;
     }
 
     public String getUsername() {

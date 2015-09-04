@@ -2,8 +2,10 @@ package web.action;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
+import domain.City;
 import domain.School;
 import domain.Seller;
+import domain.ServiceArea;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -24,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,10 +81,16 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
         find.setTel(phone);
         String username = find.getUsername();
         if(username!=null) find.setUsername(username.substring(0,1)+"*");
-        String json = JSONObject.fromObject(find,getConfig()).toString();
+        List list = new ArrayList();
+        School school = schoolService.getSchoolBySeller(find.getId());
+        ServiceArea serviceArea =  school.getServiceArea();
+        City city = serviceArea.getCity();
+        String  json="{"+"\"name\":" +"\""+find.getName()+"\""+","+"\"username\":"+"\""+find.getUsername()+"\""+","+"\"addr\":"+"\""+find.getAddr()+"\""+","+"\"headImage\":"+"\""+find.getHeadImage()+"\""+","
+            +"\"tel\":"+"\""+find.getTel()+"\""+","+"\"school\":"+"\""+school.getName()+"\""+","+"\"serviceArea\":"+"\""+serviceArea.getName()+"\""+","+"\"city\":" +"\""+ city.getName()+"\""+"}";
         PrintWriter writer = getPrintWriter();
         if(callback==null){
-            writer.write(json);
+           writer.write(json);
+
         }else {
             writeTouser(writer,json,callback);
         }
@@ -172,21 +182,34 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
      * 保存修改过的信息
      */
     @Action(
-            value = "success",
+            value = "updateSeller",
             results = {
                     @Result(name="success",type = "json")
             }
     )
     public String sellerUpdate(){
-        sellerService.update(seller);
         PrintWriter writer = getPrintWriter();
+        Seller find = (Seller)ServletActionContext.getRequest().getSession().getAttribute("seller");
+        seller.setId(find.getId());
+        if(seller.getUsername()==null||seller.getName()==null||seller.getAddr()==null){
+            if(callback==null) {
+                writer.write("\"error\"");
+            }else{
+                writeTouser(writer,"\"error\"",callback);
+            }
+            writer.flush();
+            if(writer!=null) writer.close();
+        }else{
+        sellerService.update(seller);
         if(callback==null) {
             writer.write("\"success\"");
         }else{
             writeTouser(writer,"\"success\"",callback);
         }
-        writer.flush();
-        if(writer!=null) writer.close();
+            writer.flush();
+            if(writer!=null) writer.close();
+
+        }
         return SUCCESS;
     }
     /**
@@ -341,6 +364,28 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
                     writer.close();
                 }
             }
+        return SUCCESS;
+    }
+    /**
+     * 退出
+     */
+    @Action(
+            value = "exit",
+            results = {
+                    @Result(name="success",type = "json")
+            }
+    )
+    public String exit(){
+        ServletActionContext.getRequest().getSession().invalidate();
+        PrintWriter writer = getPrintWriter();
+        if(callback==null){
+            writer.write("\"success\"");
+        }else{
+            writeTouser(writer,"\"success\"",callback);
+        }
+        if (writer!=null){
+            writer.close();
+        }
         return SUCCESS;
     }
     /**
@@ -667,6 +712,17 @@ public class SellerAction extends ActionSupport implements ModelDriven<Seller> {
         config.setExcludes(new String[]{
                 "cartitems", "orderitems", "salesBooks", "subscribeItems", "salesBooks", "schoolCategories"
                 ,"feedbacks","orderses","schools","password"
+        });
+        return config;
+    }
+    private JsonConfig sellerConfig(){
+        JsonConfig config = new JsonConfig();
+        config.setIgnoreDefaultExcludes(false);
+        config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+        config.setExcludes(new String[]{
+                "cartitems", "orderitems", "salesBooks", "subscribeItems", "salesBooks", "schoolCategories"
+                ,"feedbacks","orderses","password","state","seller","users","schools","serviceAreas","mark","id","school"
+                ,"serviceArea","city"
         });
         return config;
     }

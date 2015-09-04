@@ -10,7 +10,7 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="serviceArea" class="domain.ServiceArea" fetch="select">
+        <many-to-one name="serviceArea" class="domain.ServiceArea" fetch="select" lazy="false">
             <column name="said" />
         </many-to-one>
         <property name="name" type="java.lang.String">

@@ -38,7 +38,7 @@ public class SellerDao extends HibernateDaoSupport {
                 find.setName(seller.getName());
             }
             if(seller.getAddr()!=null){
-                find.setName(seller.getName());
+                find.setAddr(seller.getAddr());
             }
             this.getHibernateTemplate().update(find);
         }

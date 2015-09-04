@@ -10,7 +10,7 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <set name="schools" inverse="true">
+        <set name="school" inverse="true" lazy="false">
             <key>
                 <column name="sid"></column>
             </key>

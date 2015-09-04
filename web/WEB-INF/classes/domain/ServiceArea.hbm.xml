@@ -13,7 +13,7 @@
         <property name="name" type="java.lang.String">
             <column name="name" length="30" />
         </property>
-        <many-to-one name="city" class="domain.City" fetch="select">
+        <many-to-one name="city" class="domain.City" fetch="select" lazy="false">
             <column name="cid"></column>
         </many-to-one>
         <set name="schools" inverse="true">

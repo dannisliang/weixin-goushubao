@@ -4,12 +4,19 @@ import dao.OrderDao;
 import domain.Orders;
 import utils.PageBean;
 
+
 /**
  * Created by Lixiao on 9/1/2015.
  */
 public class OrderService {
     private OrderDao orderDao;
 
+    /**
+     * 改变订单的状态
+     */
+    public boolean changeOrderState(Orders order){
+        return orderDao.changeOrderState(order);
+    }
     /**
      * 根据订单状态获得订单列表
      * @param
